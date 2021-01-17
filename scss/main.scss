@@ -1,0 +1,62 @@
+@import './resets';
+@import './variables';
+
+@function weight($weight-name) {
+    @return map-get($font-weights, $weight-name)
+};
+
+@mixin flexCenter($direction) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: $direction;
+}
+
+@mixin theme($light-theme: true) {
+    @if $light-theme {
+        background: lighten($primary-color, 100%);
+        color: darken($text-color, 100%);
+    }
+}
+
+@mixin mobile {
+    @media (max-width: $mobile) {
+        @content;
+    }
+}
+
+body {
+    background: $primary-color;
+    color: $text-color;
+}
+
+.main {
+    @include flexCenter(row); //possible to say column instead of row to inverse parameter
+    width: 80%;
+    margin: 0 auto;
+
+    #{&}_paragraph { //& repeat .main but we want .main .main_paragraph so : #{&}
+        // font-weight: map-get($font-weights, bold);      instead, we can use the function
+        font-weight: weight(bold);
+
+        &:hover {
+            color: pink;
+        }
+    }
+
+    #{&}_paragraph2 {
+        @extend .main_paragraph;
+
+        &:hover {
+            color: $secondary-color;
+        }
+    }
+
+    @include mobile { //rappel le mixin media queries et passe en colonne si la variable $mobile est respecte (800px)
+        flex-direction: column;
+    }
+}
+
+.light {
+    @include theme($light-theme: true);
+}
